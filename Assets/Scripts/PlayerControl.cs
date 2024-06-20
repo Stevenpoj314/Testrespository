@@ -8,29 +8,46 @@ using UnityEngine;
 public class PlayerControl : MonoBehaviour
 {
 
-    public Rigidbody rb;
+    public CharacterController controller;
 
-    public Vector3 speed; 
-   
-  
+    public float speed = 12f;
 
-    private void Start()
+    private Vector3 newVelocity;
+
+    private bool isMove;
+
+    public void SetPlayerMove()
     {
-
-        
-       
-
+        isMove = true;
     }
-
     void Update()
     {
-        speed.x = Input.GetAxis("Horizontal");
 
-        speed.z = Input.GetAxis("Vertical");
+        if(isMove)
+        {
+            PlayerMove();  
+        }
 
-        rb.velocity = speed; 
+        if (LevelScript.instance.HasFirstKey)
+        {
+            Debug.Log("Has Key");
+        }
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            LevelScript.instance.HasFirstKey = true;
+        }
     }
 
+    private void PlayerMove()
+    {
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
+
+        Vector3 move = transform.right * x + transform.forward * z;
+
+        controller.Move(move * speed * Time.deltaTime);
+    }
+    
 
 }
